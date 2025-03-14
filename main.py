@@ -2,7 +2,7 @@ import gradio as gr
 import base64
 from gradio.components import image
 from modules.inpainting import create_inpainting_interface
-from modules.flux import create_flux_interface
+from modules.fal_ai_flux_schnell import create_flux_interface
 import os
 
 # Create interfaces for each tab
@@ -20,8 +20,9 @@ with open(file=image_path, mode="rb") as image_file:
 
 
 # Definindo o diretório de assets
-TITLE_HTML = f"""
-    <div style='display: flex; align-items: center; justify-content: flex-start; padding: 10px;'>
+# Definindo o diretório de assets
+HEADER_HTML: str = f"""
+    <div style='display: flex; align-items: center; justify-content: flex-start; padding: 10px; margin-top: -20px; padding-bottom: 0;'>
         <img 
             src='data:image/png;base64,{encoded_string}'
             style='width: 10%; margin-right: 20px;'
@@ -35,13 +36,20 @@ TITLE_HTML = f"""
     </div>
 """
 
-# Create tabbed interface (global scope)
-demo = gr.TabbedInterface(
-    interface_list=[inpainting_interface, flux_interface],
-    tab_names=["Inpainting", "Flux"],
-    title=f"{TITLE_HTML}",
-    theme="d8ahazard/rd_blue",
-)
+# Create the header component
+header = gr.HTML(value=HEADER_HTML)
+
+
+# Criar a interface completa com Blocks
+with gr.Blocks(theme="d8ahazard/rd_blue", title="fal.ai Playground") as demo:
+    # Adicionar o header
+    gr.HTML(value=HEADER_HTML)
+
+    # Adicionar a interface com abas
+    gr.TabbedInterface(
+        interface_list=[inpainting_interface, flux_interface],
+        tab_names=["Inpainting", "Flux"],
+    )
 
 
 def main() -> None:
