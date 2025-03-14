@@ -47,8 +47,8 @@ with gr.Blocks(theme="d8ahazard/rd_blue", title="fal.ai Playground") as demo:
 
     # Adicionar a interface com abas
     gr.TabbedInterface(
-        interface_list=[inpainting_interface, flux_interface],
-        tab_names=["Inpainting", "Flux"],
+        interface_list=[flux_interface, inpainting_interface],
+        tab_names=["flux/schnell", "Inpainting"],
     )
 
 
