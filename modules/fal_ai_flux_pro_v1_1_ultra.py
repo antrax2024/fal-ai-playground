@@ -2,29 +2,25 @@ from typing import Any, Dict
 import gradio as gr
 import fal_client
 from rich.console import Console
-
-
 from gradio.events import Dependency
 
 cl = Console()
 
 
-async def subscribe(prompt, image_size, num_images) -> list[Any]:
+async def subscribe(prompt, aspect_ratio, num_images) -> list[Any]:
     cl.print("[bold green]\n\n==============================================")
     cl.print("[bold green]Subscribing...")
     cl.print(f"[bold green]Prompt: [white]{prompt}")
-    cl.print(f"[bold green]Image Size:[white] {image_size}")
     cl.print(f"[bold green]Number of Images: [white]{num_images}")
+    cl.print(f"[bold green]Aspect Ratio: [white]{aspect_ratio}")
     cl.print("[bold green]==============================================\n\n")
     handler: fal_client.AsyncRequestHandle = await fal_client.submit_async(
-        application="fal-ai/flux/schnell",
+        application="fal-ai/flux-pro/v1.1-ultra",
         arguments={
             "prompt": f"{prompt}",
-            "image_size": f"{image_size}",
-            "num_inference_steps": 4,
+            "aspect_ratio": f"{aspect_ratio}",
             "num_images": num_images,
             "enable_safety_checker": False,
-            "with_logs": True,
         },
     )
 
@@ -43,12 +39,12 @@ async def subscribe(prompt, image_size, num_images) -> list[Any]:
     return image_urls
 
 
-def createFalAiFluxSchnell() -> gr.Blocks:
+def createFalAiProV11Ultra() -> gr.Blocks:
     """Creates and returns the flux interface"""
-    with gr.Blocks() as fluxSchnellInterface:
-        gr.Markdown(value="# fal-ai/flux/schnell ")
+    with gr.Blocks() as fluxProV11UltraInterface:
+        gr.Markdown(value="# fal-ai/flux-pro/v1.1-ultra")
         gr.Markdown(
-            value="FLUX.1 [schnell] is a 12 billion parameter flow transformer that generates high-quality images from text in 1 to 4 steps, suitable for personal and commercial use."
+            value="FLUX1.1 [pro] ultra is the newest version of FLUX1.1 [pro], maintaining professional-grade image quality while delivering up to 2K resolution with improved photo realism."
         )
 
         with gr.Row():
@@ -60,20 +56,24 @@ def createFalAiFluxSchnell() -> gr.Blocks:
                     max_lines=3,
                 )
 
-                image_size = gr.Dropdown(
-                    label="Image Size",
-                    info="Select the size of the image to generate.",
+                aspect_ratio = gr.Dropdown(
+                    label="Aspect Ratio",
+                    info="The aspect ratio of the generated image.",
                     choices=[
-                        "square_hd",
-                        "square",
-                        "portrait_4_3",
-                        "portrait_16_9",
-                        "landscape_4_3",
-                        "landscape_16_9",
+                        "21:9",
+                        "16:9",
+                        "4:3",
+                        "3:2",
+                        "1:1",
+                        "2:3",
+                        "3:4",
+                        "9:16",
+                        "9:21",
                     ],
                     interactive=True,
-                    value="square_hd",
+                    value="4:3",
                 )
+
                 num_images = gr.Slider(
                     label="Number of Images",
                     minimum=1,
@@ -89,8 +89,8 @@ def createFalAiFluxSchnell() -> gr.Blocks:
                 # button to generate the image
                 generateButton: Dependency = gr.Button(value="Generate Image").click(
                     fn=subscribe,
-                    inputs=[prompt, image_size, num_images],
+                    inputs=[prompt, aspect_ratio, num_images],
                     outputs=[outputs],
                 )
 
-    return fluxSchnellInterface
+    return fluxProV11UltraInterface
