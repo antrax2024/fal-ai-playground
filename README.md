@@ -1,6 +1,10 @@
 # FAL-AI Playground
 
-A Gradio-based application for experimenting with FAL-AI features like inpainting and flux animations.
+<p align="center">
+  <img src="assets/logo.png" alt="FAL-AI Playground Logo" width="30%">
+</p>
+
+A Gradio-based application for experimenting with fal.ai models.
 
 ## Setup
 

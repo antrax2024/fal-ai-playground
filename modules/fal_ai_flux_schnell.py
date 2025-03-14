@@ -1,41 +1,49 @@
+from typing import Any, Dict
 import gradio as gr
 import fal_client
-import asyncio
+from rich.console import Console
+
 
 from gradio.events import Dependency
 
+cl = Console()
 
-def on_queue_update(update):
-    if isinstance(update, fal_client.InProgress):
-        for log in update.logs:
-            print(log["message"])
 
-    result = fal_client.subscribe(
-        "fal-ai/flux/schnell",
+async def subscribe(prompt, image_size, num_images) -> list[Any]:
+    cl.print("[bold green]\n\n==============================================")
+    cl.print("[bold green]Subscribing...")
+    cl.print(f"[bold green]Prompt: [white]{prompt}")
+    cl.print(f"[bold green]Image Size:[white] {image_size}")
+    cl.print(f"[bold green]Number of Images: [white]{num_images}")
+    cl.print("[bold green]==============================================\n\n")
+    handler: fal_client.AsyncRequestHandle = await fal_client.submit_async(
+        application="fal-ai/flux/schnell",
         arguments={
-            "prompt": 'Extreme close-up of a single tiger eye, direct frontal view. Detailed iris and pupil. Sharp focus on eye texture and color. Natural lighting to capture authentic eye shine and depth. The word "FLUX" is painted over it in big, white brush strokes with visible texture.',
-            "image_size": "landscape_4_3",
+            "prompt": f"{prompt}",
+            "image_size": f"{image_size}",
             "num_inference_steps": 4,
-            "num_images": 1,
-            "enable_safety_checker": True,
+            "num_images": num_images,
+            "enable_safety_checker": False,
+            "with_logs": True,
         },
-        with_logs=True,
-        on_queue_update=on_queue_update,
     )
 
-    print(f"Result: {result}")
+    async for event in handler.iter_events(with_logs=True):
+        print(event)
+
+    result: Dict[str, Any] = await handler.get()
+
+    cl.print(f"Result: {result}")
 
     # Extract only the URLs from the images array
-    image_urls = [image["url"] for image in result["images"]]
-    print(f"Image URLs: {image_urls}")
+    image_urls: list[Any] = [image["url"] for image in result["images"]]
+    cl.print(f"Image URLs: {image_urls}\n\n\n")
     return image_urls
 
-    # return result["images"]
 
-
-def create_flux_interface() -> gr.Blocks:
+def fal_ai_flux_schnell_interface() -> gr.Blocks:
     """Creates and returns the flux interface"""
-    with gr.Blocks() as flux_interface:
+    with gr.Blocks() as flux_schnell_interface:
         gr.Markdown(value="# fal-ai/flux/schnell ")
         gr.Markdown(
             value="FLUX.1 [schnell] is a 12 billion parameter flow transformer that generates high-quality images from text in 1 to 4 steps, suitable for personal and commercial use."
@@ -74,11 +82,13 @@ def create_flux_interface() -> gr.Blocks:
                 )
 
             with gr.Column():
+                # Gallery to display the generated images
                 outputs = gr.Gallery(label="Generated Image", show_label=True)
+                # button to generate the image
                 generateButton: Dependency = gr.Button(value="Generate Image").click(
                     fn=subscribe,
                     inputs=[prompt, image_size, num_images],
                     outputs=[outputs],
                 )
 
-    return flux_interface
+    return flux_schnell_interface
