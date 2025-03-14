@@ -28,11 +28,13 @@ async def subscribe(prompt, image_size, num_images) -> list[Any]:
         },
     )
 
+    request_id: str = handler.request_id
+    cl.print(f"Request ID: {request_id}")
+
     async for event in handler.iter_events(with_logs=True):
         print(event)
 
     result: Dict[str, Any] = await handler.get()
-
     cl.print(f"Result: {result}")
 
     # Extract only the URLs from the images array
