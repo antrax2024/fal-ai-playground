@@ -1,17 +1,20 @@
+from calendar import c
 import gradio as gr
 import base64
 from modules.fal_ai_flux_pro_v1_1_ultra import createFalAiProV11Ultra
 from modules.fal_ai_flux_schnell import createFalAiFluxSchnell
 from modules.fal_ai_flux_general_inpainting import createFalAiFluxGeneralInpainting
+from modules.fal_ai_aura_sr import createFalAiAuraSr
 import os
 
-VERSION = "0.1.2"
+VERSION = "0.1.4"
 
 
 # Create interfaces for each tab
 flux_schnell_interface: gr.Blocks = createFalAiFluxSchnell()
 flux_pro_v1_1_ultra_interface: gr.Blocks = createFalAiProV11Ultra()
-fluxGeneralInpaintingInterface = createFalAiFluxGeneralInpainting()
+fluxGeneralInpaintingInterface: gr.Blocks = createFalAiFluxGeneralInpainting()
+auraSrInterface: gr.Blocks = createFalAiAuraSr()
 
 # Get the current directory (full path)
 current_directory: str = os.path.dirname(p=os.path.abspath(path=__file__))
@@ -23,7 +26,6 @@ with open(file=image_path, mode="rb") as image_file:
     encoded_string: str = base64.b64encode(s=image_file.read()).decode()
 
 
-# Definindo o diretório de assets
 # Definindo o diretório de assets
 HEADER_HTML: str = f"""
     <div style='display: flex; align-items: center; justify-content: flex-start; padding: 10px; margin-top: -20px; padding-bottom: 0;'>
@@ -58,8 +60,14 @@ with gr.Blocks(theme="d8ahazard/rd_blue", title="fal.ai Playground") as demo:
             flux_schnell_interface,
             flux_pro_v1_1_ultra_interface,
             fluxGeneralInpaintingInterface,
+            auraSrInterface,
         ],
-        tab_names=["flux/schnell", "flux/pro/v1_1/ultra", "flux-general/inpainting"],
+        tab_names=[
+            "flux/schnell",
+            "flux/pro/v1_1/ultra",
+            "flux-general/inpainting",
+            "aura-sr",
+        ],
     )
 
 

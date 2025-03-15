@@ -81,7 +81,6 @@ def createFalAiFluxGeneralInpainting() -> gr.Blocks:
         with gr.Row():
             inputPrompt = gr.Textbox(
                 label="Prompt",
-                placeholder="Describe the animation you want to create...",
                 lines=3,
                 max_lines=3,
             )

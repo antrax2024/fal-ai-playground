@@ -51,7 +51,6 @@ def createFalAiProV11Ultra() -> gr.Blocks:
             with gr.Column():
                 prompt = gr.Textbox(
                     label="Prompt",
-                    placeholder="Describe the animation you want to create...",
                     lines=3,
                     max_lines=3,
                 )
