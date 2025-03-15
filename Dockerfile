@@ -16,4 +16,4 @@ RUN uv sync
 EXPOSE 3206
 
 # Command to run the application
-CMD ["uv", "run","app.py"]
+CMD ["uv", "run","gradio", "main.py"]
