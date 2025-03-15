@@ -6,8 +6,10 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 WORKDIR /app
 
 # Copy the application files
-COPY app.py .
+COPY main.py .
 COPY pyproject.toml .
+COPY modules modules
+COPY assets assets
 
 RUN uv venv
 RUN uv sync
