@@ -15,7 +15,7 @@ def on_queue_update(update):
             cl.print(log["message"])
 
 
-def inpaintImage(inputImage, inputPrompt, numInferenceSteps, guidanceScale):
+def fillImage(inputImage, inputPrompt, safety_tolerance):
     cl.print("Inpainting image")
     cl.print(f"Saving source image...")
     sourceImage = inputImage["background"]
@@ -38,76 +38,59 @@ def inpaintImage(inputImage, inputPrompt, numInferenceSteps, guidanceScale):
     cl.print(f"Uploaded maskImage URL: {maskURL}")
 
     cl.print("Requesting to fal.ai...")
+
     result = fal_client.subscribe(
-        "fal-ai/flux-general/inpainting",
+        "fal-ai/flux-pro/v1/fill",
         arguments={
             "prompt": f"{inputPrompt}",
-            "num_inference_steps": numInferenceSteps,
-            "controlnets": [],
-            "controlnet_unions": [],
-            "ip_adapters": [],
-            "guidance_scale": guidanceScale,
-            "real_cfg_scale": 3.5,
             "num_images": 1,
-            "enable_safety_checker": False,
-            "reference_strength": 0.65,
-            "reference_end": 1,
-            "base_shift": 0.5,
-            "max_shift": 1.15,
+            "safety_tolerance": f"{safety_tolerance}",
+            "output_format": "jpeg",
             "image_url": f"{sourceURL}",
-            "strength": 0.85,
             "mask_url": f"{maskURL}",
-            "image_size": None,
         },
         with_logs=True,
         on_queue_update=on_queue_update,
     )
-    # print(result)
-    # print(result["images"][0]["url"])
-    # delete images
-    os.remove("sourceImage.png")
-    os.remove("maskImage.png")
+
+    cl.print(f"Result: {result}")
+
+    os.remove(path="sourceImage.png")
+    os.remove(path="maskImage.png")
     return result["images"][0]["url"]
 
 
-def createFalAiFluxGeneralInpainting() -> gr.Blocks:
-    """Creates and returns the flux interface"""
-    with gr.Blocks() as fluxGeneralInpaintingInterface:
-        gr.Markdown(value="# fal-ai/flux-general/inpainting")
+def createFalAiFluxProV1Fill() -> gr.Blocks:
+    with gr.Blocks() as FluxProV1FillInterface:
+        gr.Markdown(value="# fal-ai/flux-pro/v1/fill")
         gr.Markdown(
-            value="FLUX General Inpainting is a versatile endpoint that enables precise image editing and completion, supporting multiple AI extensions including LoRA, ControlNet, and IP-Adapter."
+            value="FLUX.1 [pro] Fill is a high-performance endpoint for the FLUX.1 [pro] model that enables rapid transformation of existing images, delivering high-quality style transfers and image modifications with the core FLUX capabilities."
         )
 
         with gr.Row():
-            inputPrompt = gr.Textbox(
-                label="Prompt",
-                lines=3,
-                max_lines=3,
-            )
-        with gr.Row():
-
             inputImage = gr.ImageMask(
                 type="pil",
                 label="Input Image",
             )
 
         with gr.Row():
-            numInferenceSteps = gr.Slider(
-                label="Number of Inference Steps",
+            inputPrompt = gr.Textbox(
+                label="Prompt",
+                info="The prompt to fill the masked part of the image.",
+                lines=2,
+                max_lines=2,
+            )
+
+        with gr.Row():
+
+            safety_tolerance = gr.Slider(
+                label="Safety Tolerance",
+                info="The safety tolerance level for the generated image. 1 being the most strict and 5 being the most permissive. Default value: 2",
                 minimum=1,
-                maximum=50,
+                maximum=5,
                 interactive=True,
                 step=1,
-                value=28,
-            )
-        with gr.Row():
-            guidanceScale = gr.Slider(
-                label="Guidance Scale",
-                minimum=0,
-                maximum=20,
-                interactive=True,
-                step=0.5,
-                value=5,
+                value=1,
             )
         with gr.Row():
             # Gallery to display the generated images
@@ -117,9 +100,9 @@ def createFalAiFluxGeneralInpainting() -> gr.Blocks:
         with gr.Row():
             # button to generate the image
             generateButton: Dependency = gr.Button(value="Generate Image").click(
-                fn=inpaintImage,
-                inputs=[inputImage, inputPrompt, numInferenceSteps, guidanceScale],
+                fn=fillImage,
+                inputs=[inputImage, inputPrompt, safety_tolerance],
                 outputs=[outputImage],
             )
 
-    return fluxGeneralInpaintingInterface
+    return FluxProV1FillInterface
