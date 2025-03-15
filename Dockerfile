@@ -11,11 +11,14 @@ COPY pyproject.toml .
 COPY modules modules
 COPY assets assets
 
+
+# Create virtual environment
 RUN uv venv
+# Install dependencies
 RUN uv sync
 
 # Expose the port the app runs on
 EXPOSE 3206
 
 # Command to run the application
-CMD ["uv", "run","gradio", "main.py"]
+CMD ["uv", "run","main.py"]
