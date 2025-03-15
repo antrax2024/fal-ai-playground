@@ -5,6 +5,9 @@ from modules.fal_ai_flux_schnell import createFalAiFluxSchnell
 from modules.fal_ai_flux_general_inpainting import createFalAiFluxGeneralInpainting
 import os
 
+VERSION = "0.1.2"
+
+
 # Create interfaces for each tab
 flux_schnell_interface: gr.Blocks = createFalAiFluxSchnell()
 flux_pro_v1_1_ultra_interface: gr.Blocks = createFalAiProV11Ultra()
@@ -29,11 +32,14 @@ HEADER_HTML: str = f"""
             style='width: 10%; margin-right: 20px;'
             alt='Logo'     
         >
-        <span
-            style='font-size: 1.5em; font-weight: bold;'
-        >
-            FAL-AI Playground
-        </span>
+        <div style='display: flex; flex-direction: column;'>
+            <span
+                style='font-size: 1.5em; font-weight: bold;'
+            >
+                fal.ai Playground
+            </span>
+            <span style='font-size: 0.8em;'>Version {VERSION}</span>
+        </div>
     </div>
 """
 
