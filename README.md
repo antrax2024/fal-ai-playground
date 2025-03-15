@@ -1,6 +1,11 @@
-# FAL.ai Playground
+
+# fal.ai Playground
 
 This repository is a playground for experimenting with [fal.ai](https://fal.ai), a platform for deploying and running AI models at scale. Use this space to test various AI models, build applications, and explore the capabilities of fal.ai.
+
+## Screenshot
+
+![Application Screenshot](/assets/screenshot.jpg)
 
 ## Getting Started
 
