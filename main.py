@@ -2,11 +2,13 @@ import gradio as gr
 import base64
 from modules.fal_ai_flux_pro_v1_1_ultra import createFalAiProV11Ultra
 from modules.fal_ai_flux_schnell import createFalAiFluxSchnell
+from modules.fal_ai_flux_general_inpainting import createFalAiFluxGeneralInpainting
 import os
 
 # Create interfaces for each tab
 flux_schnell_interface: gr.Blocks = createFalAiFluxSchnell()
 flux_pro_v1_1_ultra_interface: gr.Blocks = createFalAiProV11Ultra()
+fluxGeneralInpaintingInterface = createFalAiFluxGeneralInpainting()
 
 # Get the current directory (full path)
 current_directory: str = os.path.dirname(p=os.path.abspath(path=__file__))
@@ -46,8 +48,12 @@ with gr.Blocks(theme="d8ahazard/rd_blue", title="fal.ai Playground") as demo:
 
     # Adicionar a interface com abas
     gr.TabbedInterface(
-        interface_list=[flux_schnell_interface, flux_pro_v1_1_ultra_interface],
-        tab_names=["flux/schnell", "flux/pro/v1_1/ultra"],
+        interface_list=[
+            flux_schnell_interface,
+            flux_pro_v1_1_ultra_interface,
+            fluxGeneralInpaintingInterface,
+        ],
+        tab_names=["flux/schnell", "flux/pro/v1_1/ultra", "flux-general/inpainting"],
     )
 
 
