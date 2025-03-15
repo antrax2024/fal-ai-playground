@@ -61,7 +61,7 @@ def main() -> None:
     # Launch the app
     demo.launch(
         debug=True,
-        server_port=3205,
+        server_port=3206,
         server_name="0.0.0.0",
     )
 

@@ -13,7 +13,7 @@ RUN uv venv
 RUN uv sync
 
 # Expose the port the app runs on
-EXPOSE 3204
+EXPOSE 3206
 
 # Command to run the application
 CMD ["uv", "run","app.py"]
