@@ -25,7 +25,7 @@ RUN chown -R ${USER_NAME}:${GROUP_NAME} /app
 USER ${USER_NAME}
 
 # Create virtual environment
-RUN uv venv --python 3.12
+RUN uv venv --python 3.13 .venv
 
 # Expose the port the app runs on
 EXPOSE 3206
