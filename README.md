@@ -28,7 +28,7 @@ cd fal-ai-playground
 
 ```bash
 # Create and activate virtual environment
-uv venv --python 3.12
+uv venv --python 3.13
 source venv/bin/activate
 
 # Install dependencies
@@ -53,9 +53,10 @@ uv run gradio main.py
 ### Running with docker
 
 Verify ports if your host 3206 ports is free. If no, edit the Dockerfile and docker-build to mapping to correct port.
+Edit **docker-compose.yml** and change parameters if necessary. 
 
 ```bash
-./docker-build.sh
+./build.sh
 ```
 
 ## Contributing
