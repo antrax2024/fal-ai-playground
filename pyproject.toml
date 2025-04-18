@@ -3,10 +3,8 @@ name = "fal-ai-playground"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-authors = [
-    { name = "Antrax", email = "fredcox@gmail.com" }
-]
-requires-python = ">=3.12"
+authors = [{ name = "Antrax", email = "fredcox@gmail.com" }]
+requires-python = ">=3.13"
 dependencies = [
     "fal-client>=0.5.9",
     "gradio>=5.21.0",

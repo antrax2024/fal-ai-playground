@@ -52,7 +52,7 @@ header = gr.HTML(value=HEADER_HTML)
 
 
 # Criar a interface completa com Blocks
-with gr.Blocks(theme="d8ahazard/rd_blue", title="fal.ai Playground") as demo:
+with gr.Blocks(title="fal.ai Playground") as demo:
     # Adicionar o header
     gr.HTML(value=HEADER_HTML)
 

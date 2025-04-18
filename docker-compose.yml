@@ -1,0 +1,14 @@
+services:
+    web:
+        container_name: fal-ai-playground
+        restart: always
+
+        environment:
+            - FAL_KEY=${FAL_KEY}
+
+        ports:
+          - "3206:3206"
+
+        build:
+            context: .
+            dockerfile: Dockerfile
